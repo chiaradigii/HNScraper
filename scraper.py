@@ -24,25 +24,28 @@ class HackerNewsScraper:
             items = soup.select('tr.athing')[:30] # Select first 30 entries
 
             for item in items:
-                rank = item.select_one('.rank')
-                title = item.select_one('.title a')
-                # Parent tr tag contains the subtext with score and comments
-                subtext = item.find_next_sibling('tr').select_one('.subtext')
-                score = subtext.select_one('.score')
-                comments_link = subtext.select_one('a[href^="item?id="]')
+                try:
+                    rank = item.select_one('.rank')
+                    title = item.select_one('.title a')
+                    # Parent tr tag contains the subtext with score and comments
+                    subtext = item.find_next_sibling('tr').select_one('.subtext')
+                    score = subtext.select_one('.score')
+                    comments_link = subtext.select_one('a[href^="item?id="]')
 
-                rank = rank.text.strip('.') if rank else 'N/A'
-                title = title.text if title else 'No title found'
-                points = int(score.text.split()[0]) if score else 0
-                comments_text = comments_link.text if comments_link else '0 comments'
-                comments = int(comments_text.replace('\xa0', ' ').split()[0])
+                    rank = rank.text.strip('.') if rank else 'N/A'
+                    title = title.text if title else 'No title found'
+                    points = int(score.text.split()[0]) if score else 0
+                    comments_text = comments_link.text if comments_link else '0 comments'
+                    comments = int(comments_text.replace('\xa0', ' ').split()[0])
 
-                self.entries.append({
-                    'rank': rank,
-                    'title': title,
-                    'points': points,
-                    'comments': comments
-                })
+                    self.entries.append({
+                        'rank': rank,
+                        'title': title,
+                        'points': points,
+                        'comments': comments
+                    })
+                except (AttributeError, TypeError) as e:
+                    return [{'error': f"Failed to parse item: {str(e)}"}]
         except Exception as e:
             return [{'error': f"Failed to parse data: {str(e)}"}]
 
