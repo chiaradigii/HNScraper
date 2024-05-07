@@ -33,8 +33,8 @@ def scrape_hn_top_entries(url):
             rank = rank.text.strip('.') if rank else 'N/A'
             title = title.text if title else 'No title found'
             points = int(score.text.split()[0]) if score else 0
-            comments = int(comments_link.text.split()[0]) if comments_link and 'comments' in comments_link.text else 0
-
+            comments_text = comments_link.text if comments_link else '0 comments'
+            comments = int(comments_text.replace('\xa0', ' ').split()[0])
             entries.append({
                 'rank': rank,
                 'title': title,
