@@ -1,8 +1,8 @@
-# HackerNewsScraper
+# HackerNewsScraper
 
 HackerNewsScraper is a Python tool for scraping the top 30 entries from the Hacker News homepage. This scraper extracts key details such as rank, title, points, and comments for each post. Additionally, it provides functionality to filter these entries based on the number of words in the title and to sort them by either comments or points.
 
-## Features
+## Features
 * Scrape top 30 entries from Hacker News.
 * Filter entries with more than or less than or equal to 5 words in their titles.
 * Sort entries by the number of comments or points.
