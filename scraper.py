@@ -46,8 +46,26 @@ def scrape_hn_top_entries(url):
 
     return entries
 
-# Example URL
 url = 'https://news.ycombinator.com/'
-hn_entries = scrape_hn_top_entries(url)
-hn_entries = scrape_hn_top_entries(url)
-pprint(hn_entries)
+entries = scrape_hn_top_entries(url)
+#pprint(entries)
+
+def filter_by_title_length(entries, max_words = 5, sort_by = 'comments'):
+    """
+    Filter all previous entries with no more than five words in the title ordered by the number of comments first.
+
+    Args:
+        entries (list of dict): The entries to filter.
+        max_words (int): Maximum number of words in the title for filtering. Default is 5.
+        sort_by (str): The key to sort the entries by ('comments' is default).
+
+    Returns:
+        list of dict: The filtered and sorted list of entries.
+    """
+    filtered_entries = [entry for entry in entries if len(entry['title'].split())  <= max_words]
+    return sorted(filtered_entries, key=lambda x: x[sort_by], reverse=True)
+
+filtered_no_more_than_five = filter_by_title_length(entries, 5, 'comments')
+
+print("Entries with no more than five words in the title sorted by comments:")
+pprint(filtered_no_more_than_five)
