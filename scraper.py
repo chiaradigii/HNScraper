@@ -22,6 +22,7 @@ def scrape_hn_top_entries(url):
         soup = BeautifulSoup(response.text, 'html.parser')
         items = soup.select('tr.athing')[:30] # Select first 30 entries
         entries = []
+
         for item in items:
             rank = item.select_one('.rank')
             title = item.select_one('.title a')
@@ -35,6 +36,7 @@ def scrape_hn_top_entries(url):
             points = int(score.text.split()[0]) if score else 0
             comments_text = comments_link.text if comments_link else '0 comments'
             comments = int(comments_text.replace('\xa0', ' ').split()[0])
+
             entries.append({
                 'rank': rank,
                 'title': title,
@@ -46,26 +48,34 @@ def scrape_hn_top_entries(url):
 
     return entries
 
-url = 'https://news.ycombinator.com/'
-entries = scrape_hn_top_entries(url)
-#pprint(entries)
 
-def filter_by_title_length(entries, max_words = 5, sort_by = 'comments'):
+def filter_entries(entries, sort_by='comments', mode='less_equal'):
     """
-    Filter all previous entries with no more than five words in the title ordered by the number of comments first.
-
+    Filter entries based on the number of words in the title and sort them by specific criteria.
+    This function filters entries to those with titles containing more than or less than or equal to 5 words,
+    depending on the mode specified, and sorts them based on either 'comments' or 'points'.
+    
     Args:
         entries (list of dict): The entries to filter.
-        max_words (int): Maximum number of words in the title for filtering. Default is 5.
         sort_by (str): The key to sort the entries by ('comments' is default).
 
     Returns:
         list of dict: The filtered and sorted list of entries.
     """
-    filtered_entries = [entry for entry in entries if len(entry['title'].split())  <= max_words]
+    if mode == 'less_equal':
+        filtered_entries = [entry for entry in entries if len(entry['title'].split()) <= 5]
+    else:
+        filtered_entries = [entry for entry in entries if len(entry['title'].split()) > 5]
+
     return sorted(filtered_entries, key=lambda x: x[sort_by], reverse=True)
 
-filtered_no_more_than_five = filter_by_title_length(entries, 5, 'comments')
+url = 'https://news.ycombinator.com/'
+entries = scrape_hn_top_entries(url)
+#pprint(entries)
+filtered_more_than_five = filter_entries(entries, 5, 'comments', 'greater')
+filtered_five_or_less = filter_entries(entries, 5, 'points', 'less_equal')
 
-print("Entries with no more than five words in the title sorted by comments:")
-pprint(filtered_no_more_than_five)
+print("Entries with more than five words in the title sorted by comments:")
+pprint(filtered_more_than_five)
+print("Entries with five or fewer words in the title sorted by points:")
+pprint(filtered_five_or_less)
