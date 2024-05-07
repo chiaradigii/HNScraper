@@ -1,10 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
+import logging
 
 class HackerNewsScraper:
+    """ A class to scrape the top entries from the Hacker News homepage."""
+
     def __init__(self, url):
-        self.url = url
+        self.url = url # URL of the Hacker News homepage
         self.entries = []
 
     def scrape(self):
@@ -17,7 +20,8 @@ class HackerNewsScraper:
             response = requests.get(self.url)
             response.raise_for_status()  # HTTPError is raised if the status is 4xx, 5xx
         except requests.RequestException as e:
-            return [{'error': str(e)}]
+            logging.error(f"Failed to get data from {self.url}: {str(e)}")
+            return []
 
         try:
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -45,9 +49,11 @@ class HackerNewsScraper:
                         'comments': comments
                     })
                 except (AttributeError, TypeError) as e:
-                    return [{'error': f"Failed to parse item: {str(e)}"}]
+                    logging.error(f"Failed to parse item: {str(e)}")
+                    return []
         except Exception as e:
-            return [{'error': f"Failed to parse data: {str(e)}"}]
+            logging.error(f"Failed to parse data: {str(e)}")
+            return []
 
         return self.entries
     
