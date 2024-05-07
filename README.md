@@ -11,8 +11,10 @@ HackerNewsScraper is a Python tool for scraping the top 30 entries from the Hack
 Before you begin, ensure you have met the following requirements:
 
 * You have installed the latest version of Python.
-* You have installed the necessary Python packages listed in the requirements.txt file. You can install them using pip:
-    pip install -r requirements.txt
+* You have installed the necessary Python packages listed in the requirements.txt file.
+  You can install them using pip:
+  
+pip install -r requirements.txt
 
 ## Installation and Setup
 
@@ -21,13 +23,15 @@ git clone https://github.com/chiaradigii/HNScraper.git
 
 * Set up a virtual environment and install the required packages:
 
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    pip install -r requirements.txt
+python -m venv venv
+
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+
+pip install -r requirements.txt
 
 ## Usage
 
-* To run the scraper:
+### To run the scraper:
 
 from scraper import HackerNewsScraper
 
@@ -35,16 +39,13 @@ from scraper import HackerNewsScraper
     entries = scraper.scrape()
     print(entries)
 
-* To filter and sort the scraped entries:
+### To filter and sort the scraped entries:
 
-    # Filter entries with more than five words and sort by comments
-    filtered_more_than_five = scraper.filter_entries(sort_by='comments', mode='greater')
+filtered_more_than_five = scraper.filter_entries(sort_by='comments', mode='greater')
+filtered_five_or_less = scraper.filter_entries(sort_by='points', mode='less_equal')
 
-    # Filter entries with five or less words and sort by points
-    filtered_five_or_less = scraper.filter_entries(sort_by='points', mode='less_equal')
-
-    print("Entries with titles containing more than five words:", filtered_more_than_five)
-    print("\nEntries with titles containing five or less words:", filtered_five_or_less)
+print("Entries with titles containing more than five words:", filtered_more_than_five)
+print("\nEntries with titles containing five or less words:", filtered_five_or_less)
 
 ## Testing
 
